@@ -5,6 +5,7 @@ ECMO Bridge is a state-of-the-art application designed to efficiently allocate E
 ## Checklist for Development Progress
 
 - [ ] Design and implement the landing page.
+- [x] Add authentication
 - [ ] Transition UI components to the new framework.
 - [ ] Integrate tRPC for type-safe remote procedure calls.
 
