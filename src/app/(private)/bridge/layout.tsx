@@ -14,7 +14,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <SideNavbar />
-        {children}
+        <div className="ml-64"> {children}</div>
       </body>
     </html>
   );
