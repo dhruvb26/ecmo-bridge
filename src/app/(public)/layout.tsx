@@ -6,10 +6,14 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import Navbar from "~/components/main-navbar";
 import { cn } from "~/lib/utils";
-
+import { Roboto } from "next/font/google";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata = {
@@ -29,7 +33,7 @@ export default function RootLayout({
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
-            inter.variable,
+            roboto.className,
           )}
         >
           <TRPCReactProvider>

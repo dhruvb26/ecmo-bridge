@@ -7,34 +7,30 @@ import {
 } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  RiUser2Fill,
+  RiUser3Fill,
+  RiDashboardHorizontalLine,
+  RiUser4Fill,
+  RiUser4Line,
+} from "@remixicon/react";
+import { NavButton } from "./nav-button";
 const SideNavbar = () => {
   return (
-    <div className="fixed left-0 top-0 flex h-full w-40 flex-col items-start gap-2 overflow-y-auto border-r-[0.5px] border-gray-300 bg-white p-4">
+    <div className="fixed left-0 top-0 flex h-full w-40 flex-col items-center gap-2 overflow-y-auto border-r-[0.5px] border-gray-300 bg-white p-4">
       <Image width={25} height={25} src="/favicon.ico" alt="Logo" />
-      <Button variant={"ghost"} className="flex w-full items-start gap-2">
-        <div className="flex w-6 justify-start">
-          <DashboardIcon />
-        </div>
-        <Link href={"/bridge/dashboard"}>
-          <span>Dashboard</span>
-        </Link>
-      </Button>
-
-      <Button variant={"ghost"} className="flex w-full items-start gap-2">
-        <div className="flex w-6 justify-start">
-          <AvatarIcon />
-        </div>
-        <Link href={"/bridge/onboarding"}>
-          <span>Onboarding</span>
-        </Link>
-      </Button>
-
-      <Button variant={"ghost"} className="flex w-full items-start gap-2">
-        <div className="flex w-6 justify-start">
-          <ActivityLogIcon />
-        </div>
-        <span>Actions</span>
-      </Button>
+      <NavButton variant={"ghost"} className="w-full">
+        <Link href={"/bridge/dashboard"}>Dashboard</Link>
+      </NavButton>
+      <NavButton variant={"ghost"} className="w-full">
+        <Link href={"/bridge/onboarding"}>Onboarding</Link>
+      </NavButton>
+      <NavButton variant={"ghost"} className="w-full">
+        <Link href={"/bridge/patients"}>Patients</Link>
+      </NavButton>
+      <NavButton variant={"ghost"} className="w-full">
+        <Link href={"/bridge/machines"}>ECMOS</Link>
+      </NavButton>
     </div>
   );
 };

@@ -1,26 +1,35 @@
 "use client";
 import React from "react";
-import { RiRecordCircleFill } from "@remixicon/react";
-
 import { Badge, BadgeDelta } from "@tremor/react";
 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "~/components/ui/card";
+import {
+  RiVerifiedBadgeFill,
+  RiErrorWarningFill,
+  RiTimeFill,
+} from "@remixicon/react";
 const DashboardPage = () => {
   return (
-    <div>
-      DashboardPage
-      <div className="mx-auto space-y-12">
-        <div className="flex flex-wrap items-center justify-center gap-6">
-          <Badge>Updated</Badge>
-          <Badge icon={RiRecordCircleFill}>live</Badge>
-          <BadgeDelta deltaType="increase" isIncreasePositive={true} />
-          <BadgeDelta deltaType="increase" isIncreasePositive={true}>
-            increase
-          </BadgeDelta>
-          <BadgeDelta deltaType="moderateDecrease" isIncreasePositive={true}>
-            21.2%
-          </BadgeDelta>
-        </div>
-      </div>
+    <div className="flex flex-col items-start justify-center space-y-2 p-10">
+      <h1 className="text-3xl font-bold">
+        Dashboard{" "}
+        <Badge
+          className="font-normal"
+          icon={RiVerifiedBadgeFill}
+          color={"green"}
+        >
+          Verified
+        </Badge>
+        <Badge className="font-normal" icon={RiTimeFill} color={"red"}>
+          Not verified
+        </Badge>
+      </h1>
     </div>
   );
 };
