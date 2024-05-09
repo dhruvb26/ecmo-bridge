@@ -1,15 +1,8 @@
-import { Inter } from "next/font/google";
 import "~/styles/globals.css";
-import { Roboto } from "next/font/google";
-import SideNavbar from "./_components/side-navbar";
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-});
+import Sidebar from "./_components/sidebar";
+import { TRPCReactProvider } from "~/trpc/react";
+import { ClerkProvider } from "@clerk/nextjs";
+import { GeistSans } from "geist/font/sans";
 
 export default function RootLayout({
   children,
@@ -17,11 +10,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${roboto.className} antialiased`}>
-        <SideNavbar />
-        <div className="ml-64"> {children}</div>
-      </body>
-    </html>
+    <>
+      <ClerkProvider>
+        <html lang="en">
+          <body
+            className={`${GeistSans.className} flex justify-between antialiased`}
+          >
+            <TRPCReactProvider>
+              <Sidebar />
+              <main className="h-full w-full">{children}</main>
+              <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6p47Gmzx-LGcoMCBjISxYqi42871sznA&libraries=places"></script>
+            </TRPCReactProvider>
+          </body>
+        </html>
+      </ClerkProvider>
+    </>
   );
 }

@@ -5,7 +5,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import Navbar from "~/components/main-navbar";
+import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
+import Script from "next/script";
 import { Roboto } from "next/font/google";
 const inter = Inter({
   subsets: ["latin"],
@@ -33,7 +35,7 @@ export default function RootLayout({
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
-            roboto.className,
+            GeistSans.className,
           )}
         >
           <TRPCReactProvider>
