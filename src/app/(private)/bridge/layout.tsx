@@ -3,6 +3,7 @@ import Sidebar from "./_components/sidebar";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
+import { Toaster } from "~/components/ui/sonner";
 
 export default function RootLayout({
   children,
@@ -19,6 +20,7 @@ export default function RootLayout({
             <TRPCReactProvider>
               <Sidebar />
               <main className="h-full w-full">{children}</main>
+              <Toaster />
               <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6p47Gmzx-LGcoMCBjISxYqi42871sznA&libraries=places"></script>
             </TRPCReactProvider>
           </body>

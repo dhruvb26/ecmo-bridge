@@ -109,4 +109,7 @@ export const ecmoRouter = createTRPCRouter({
 
       return await ctx.db.delete(ecmos).where(eq(ecmos.id, input.id));
     }),
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.ecmos.findMany();
+  }),
 });

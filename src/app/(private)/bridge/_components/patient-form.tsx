@@ -13,6 +13,14 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -20,15 +28,10 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { getCurrentDateTime } from "~/server/api/functions";
 
 export function PatientForm() {
   const router = useRouter();
@@ -87,11 +90,15 @@ export function PatientForm() {
 
   const createPatient = api.patient.create.useMutation({
     onSuccess: () => {
-      console.log("added successfully.");
+      // console.log("added successfully.");
+      toast.success("Patient created successfully", {
+        description: `Patient was added on ${getCurrentDateTime()}`,
+      });
       router.refresh(); // Refresh the page after adding a new patient
     },
     onError: (error) => {
-      console.error("error", error);
+      // console.error("error", error);
+      toast.error(error.message);
     },
   });
 
@@ -101,119 +108,109 @@ export function PatientForm() {
   }
 
   return (
-    <div className="flex min-h-[200px] w-[400px] flex-col items-center justify-center">
-      <Card className="flex w-full flex-col items-center p-4 pb-10">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">New Patient</CardTitle>
-          <CardDescription className="text-md">
-            Fill in the for the new patient.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="w-[60%]">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col space-y-8"
-            >
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="For eg: Phoenix Children"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      This is your patient's name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="age"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Age</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))} // Convert string to number
-                        value={field.value}
-                      ></Input>
-                    </FormControl>
-                    <FormDescription>
-                      Choose the age for your patient.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="specialCare"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Special Care</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a special care type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {specialCareTypes.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="ecmoType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ECMO</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a ECMO type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ecmoTypes.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+    <Dialog>
+      <DialogTrigger>Add Patient</DialogTrigger>
 
-              <Button type="submit">Submit</Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+      <DialogContent className="w-[50%] p-10">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="For eg: Phoenix Children" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your patient's name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Age</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))} // Convert string to number
+                      value={field.value}
+                    ></Input>
+                  </FormControl>
+                  <FormDescription>
+                    Choose the age for your patient.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="specialCare"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Special Care</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a special care type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {specialCareTypes.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="ecmoType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ECMO</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a ECMO type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {ecmoTypes.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

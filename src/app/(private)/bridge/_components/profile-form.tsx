@@ -24,6 +24,8 @@ import {
 } from "~/components/ui/card";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { getCurrentDateTime } from "~/server/api/functions";
 
 const formSchema = z.object({
   name: z.string().min(8).max(100),
@@ -72,11 +74,15 @@ export function ProfileForm() {
 
   const createHospital = api.hospital.create.useMutation({
     onSuccess: () => {
-      console.log("added successfully.");
+      // console.log("added successfully.");
+      toast.success("Hospital info updated successfully", {
+        description: `Hospital info was updated on ${getCurrentDateTime()}`,
+      });
       router.refresh();
     },
     onError: (error) => {
-      console.error("error", error);
+      // console.error("error", error);
+      toast.error(error.message);
     },
   });
 

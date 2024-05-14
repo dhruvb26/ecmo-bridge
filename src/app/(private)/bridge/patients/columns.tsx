@@ -16,6 +16,7 @@ import {
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import {
+  DefaultDialogTrigger,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -46,6 +47,8 @@ import { CardContent } from "~/components/ui/card";
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import { set } from "date-fns";
+import { toast } from "sonner";
+import { getCurrentDateTime } from "~/server/api/functions";
 
 const editPatientSchema = z.object({
   name: z.string().min(1, { message: "Minimum 1 character required" }).max(30),
@@ -147,8 +150,15 @@ export const columns: ColumnDef<Patient>[] = [
       const router = useRouter();
       const edit = api.patient.edit.useMutation({
         onSuccess: () => {
-          console.log("edited successfully.");
+          // console.log("edited successfully.");
+          toast.success("Patient edited successfully", {
+            description: `Patient was edited on ${getCurrentDateTime()}`,
+          });
           router.refresh();
+        },
+        onError: (error) => {
+          // console.error("error", error);
+          toast.error(error.message);
         },
       });
       const SpecialCareCategory = z.enum(
@@ -175,7 +185,19 @@ export const columns: ColumnDef<Patient>[] = [
         ECMOType.parse(row.original.ecmoType),
       );
 
-      const query = api.patient.delete.useMutation({});
+      const query = api.patient.delete.useMutation({
+        onSuccess: () => {
+          // console.log("deleted successfully.");
+          toast.success("Patient deleted successfully", {
+            description: `Patient was deleted on ${getCurrentDateTime()}`,
+          });
+          router.refresh();
+        },
+        onError: (error) => {
+          // console.log("error", error);
+          toast.error(error.message);
+        },
+      });
       const handleDelete = useCallback(
         async (id: number) => {
           router.refresh();
@@ -225,15 +247,13 @@ export const columns: ColumnDef<Patient>[] = [
               <DropdownMenuItem onClick={() => handleDelete(patient.id)}>
                 Delete Patient
               </DropdownMenuItem>
-              <DialogTrigger>
-                <DropdownMenuItem>Edit Info</DropdownMenuItem>
-              </DialogTrigger>
+
+              <DropdownMenuItem>
+                <DefaultDialogTrigger>Edit Patient</DefaultDialogTrigger>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit patient info</DialogTitle>
-            </DialogHeader>
+          <DialogContent className="p-10">
             <Label>Name</Label>
             <Input
               id="name"

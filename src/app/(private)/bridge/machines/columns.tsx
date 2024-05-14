@@ -24,6 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DefaultDialogTrigger,
 } from "~/components/ui/dialog";
 import {
   Select,
@@ -35,6 +36,8 @@ import {
 import { Input } from "~/components/ui/input";
 import { useState } from "react";
 import { Label } from "~/components/ui/label";
+import { toast } from "sonner";
+import { getCurrentDateTime } from "~/server/api/functions";
 
 export type ECMO = {
   id: number;
@@ -139,8 +142,15 @@ export const columns: ColumnDef<ECMO>[] = [
       const router = useRouter();
       const edit = api.ecmo.edit.useMutation({
         onSuccess: () => {
-          console.log("edited successfully.");
+          // console.log("edited successfully.");
+          toast.success("ECMO edited successfully", {
+            description: `ECMO was updated on ${getCurrentDateTime()}`,
+          });
           router.refresh();
+        },
+        onError: (error) => {
+          // console.log("error", error);
+          toast.error(error.message);
         },
       });
       const ECMOType = z.enum(["PULMONARY", "CARDIAC", "ECPR"], {
@@ -152,7 +162,19 @@ export const columns: ColumnDef<ECMO>[] = [
         { value: "ECPR", label: "ECPR" },
       ];
 
-      const query = api.ecmo.delete.useMutation();
+      const query = api.ecmo.delete.useMutation({
+        onSuccess: () => {
+          // console.log("ECMO deleted successfully");
+          toast.success("ECMO deleted successfully", {
+            description: `ECMO was deleted on ${getCurrentDateTime()}`,
+          });
+          router.refresh();
+        },
+        onError: (error) => {
+          // console.log("error", error);
+          toast.error(error.message);
+        },
+      });
       const handleDelete = useCallback(
         async (id: number) => {
           router.refresh();
@@ -190,12 +212,12 @@ export const columns: ColumnDef<ECMO>[] = [
               <DropdownMenuItem onClick={() => handleDelete(ecmo.id)}>
                 Delete ECMO
               </DropdownMenuItem>
-              <DialogTrigger>
-                <DropdownMenuItem>Edit Info</DropdownMenuItem>
-              </DialogTrigger>
+              <DropdownMenuItem>
+                <DefaultDialogTrigger>Edit ECMO</DefaultDialogTrigger>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DialogContent>
+          <DialogContent className="p-10">
             <Label>Model</Label>
             <Input
               id="model"
@@ -209,7 +231,11 @@ export const columns: ColumnDef<ECMO>[] = [
               onChange={(e) => setSerial(e.target.value)}
             />
             <Label>In Use</Label>
-            <Switch id="inUse" onCheckedChange={(value) => setInUse(value)} />
+            <Switch
+              id="inUse"
+              checked={inUse}
+              onCheckedChange={(value) => setInUse(value)}
+            />
             <Label>Type</Label>
             <Select
               onValueChange={(value) => setType(ECMOType.parse(value))}
@@ -218,7 +244,6 @@ export const columns: ColumnDef<ECMO>[] = [
               <SelectTrigger>
                 <SelectValue placeholder="Select an ECMO type" />
               </SelectTrigger>
-
               <SelectContent>
                 {ecmoTypes.map((item) => (
                   <SelectItem key={item.value} value={item.value}>

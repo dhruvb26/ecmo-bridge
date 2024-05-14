@@ -19,6 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import {
   Card,
@@ -30,6 +38,9 @@ import {
 import { api } from "~/trpc/react";
 import { Switch } from "~/components/ui/switch";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useState } from "react";
+import { getCurrentDateTime } from "~/server/api/functions";
 
 export function ECMOForm() {
   const router = useRouter();
@@ -41,6 +52,7 @@ export function ECMOForm() {
     { value: "CARDIAC", label: "Cardiac" },
     { value: "ECPR", label: "ECPR" },
   ];
+  const [message, setMessage] = useState("");
 
   const newEcmoSchema = z.object({
     model: z
@@ -67,115 +79,110 @@ export function ECMOForm() {
 
   const createEcmo = api.ecmo.create.useMutation({
     onSuccess: () => {
-      console.log("ECMO created successfully");
+      // console.log("ECMO created successfully");
+      toast.success("ECMO created successfully", {
+        description: `ECMO was added on ${getCurrentDateTime()}`,
+      });
       router.refresh();
+    },
+    onError: (error) => {
+      // console.log("error", error);
+      toast.error(error.message);
     },
   });
 
   function onSubmit(values: z.infer<typeof newEcmoSchema>) {
     createEcmo.mutate(values);
-    console.log("Form submitted with values:", values);
   }
 
   return (
-    <div className="flex min-h-[200px] w-[400px] flex-col items-center justify-center">
-      <Card className="flex w-full flex-col items-center p-4 pb-10">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">New ECMO</CardTitle>
-          <CardDescription className="text-md">
-            Fill in the details of your new ECMO.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="w-[60%]">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col space-y-8"
-            >
-              <FormField
-                control={form.control}
-                name="model"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Model</FormLabel>
+    <Dialog>
+      <DialogTrigger>Add ECMO</DialogTrigger>
+      <DialogContent className="w-[50%] p-10">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="model"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Model</FormLabel>
+                  <FormControl>
+                    <Input placeholder="For eg: ABC-123" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your ECMO's model.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="serial"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Serial</FormLabel>
+                  <FormControl>
+                    <Input placeholder="For eg: ABC-123" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your ECMO's serial.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <Input placeholder="For eg: ABC-123" {...field} />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a special care type" />
+                      </SelectTrigger>
                     </FormControl>
+                    <SelectContent>
+                      {ecmoTypes.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="inUse"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">In use?</FormLabel>
                     <FormDescription>
-                      This is your ECMO's model.
+                      Receive emails about new products, features, and more.
                     </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="serial"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Serial</FormLabel>
-                    <FormControl>
-                      <Input placeholder="For eg: ABC-123" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is your ECMO's serial.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a special care type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ecmoTypes.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="inUse"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">In use?</FormLabel>
-                      <FormDescription>
-                        Receive emails about new products, features, and more.
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Submit</Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

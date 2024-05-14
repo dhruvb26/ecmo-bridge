@@ -15,9 +15,8 @@ const MachinesPage = async () => {
           You have <span className="font-bold">{count}</span> machines.
         </p>
       </div>
-      <div className="flex flex-col justify-between p-2 lg:flex-row lg:space-x-2 lg:space-y-0">
+      <div className=" w-[80%] p-2 lg:flex-row lg:space-x-2 lg:space-y-0">
         <DataTable data={ecmos} columns={columns} />
-        <ECMOForm />
       </div>
     </div>
   );

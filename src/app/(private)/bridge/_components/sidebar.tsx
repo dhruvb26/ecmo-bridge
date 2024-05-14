@@ -1,97 +1,149 @@
-import React from "react";
+"use client";
 import {
-  DashboardIcon,
-  AvatarIcon,
-  ActivityLogIcon,
-  HeartIcon,
-  GearIcon,
-} from "@radix-ui/react-icons";
-import Image from "next/image";
+  ActivityIcon,
+  HomeIcon,
+  LogOutIcon,
+  SettingsIcon,
+  User2Icon,
+  UserRoundPlusIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { NavButton } from "./nav-button";
-import { api } from "~/trpc/server";
+import React, { useState } from "react";
 
-const Sidebar = async () => {
-  const hospital = await api.hospital.get();
-  const isVerified = hospital?.isVerified;
+const Sidebar = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <>
-      {/* Large screens (>=768px or "md" breakpoint in Tailwind) */}
-      <div className="hidden min-h-screen min-w-[200px] flex-col items-center border-r-[0.5px] border-gray-300 bg-white p-4 md:flex md:w-[200px]">
-        <Image width={25} height={25} src="/favicon.ico" alt="Logo" />
-        <NavButton
-          icon={<DashboardIcon />}
-          variant={"ghost"}
-          className="w-full text-left"
+    <div className="flex min-h-screen flex-auto flex-shrink-0 flex-col bg-primary-purple-200 text-gray-800 antialiased">
+      <div
+        id="first"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`flex h-full w-16 flex-col items-center overflow-hidden rounded bg-primary-purple-900 text-washed-purple-300 ${isHovered ? "duration-8000 hidden transition ease-in-out" : "duration-8000 flex transition-all ease-in-out"}`}
+      >
+        <Link className="mt-3 flex items-center justify-center" href="/">
+          <svg
+            className="h-8 w-8 fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z" />
+          </svg>
+        </Link>
+        <div className="mt-3 flex flex-col items-center border-t border-gray-700 text-white">
+          <Link
+            className="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-primary-purple-100"
+            href="#"
+          >
+            <HomeIcon size={24} />
+          </Link>
+          <Link
+            className="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-primary-purple-100"
+            href="#"
+          >
+            <UserRoundPlusIcon size={24} />
+          </Link>
+          <Link
+            className="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-primary-purple-100 "
+            href="#"
+          >
+            <ActivityIcon size={24} />
+          </Link>
+        </div>
+        <div className="mt-2 flex flex-col items-center border-t border-gray-700 text-white">
+          <Link
+            className="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-primary-purple-100"
+            href="#"
+          >
+            <SettingsIcon size={24} />
+          </Link>
+          <Link
+            className="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-primary-purple-100"
+            href="#"
+          >
+            <User2Icon size={24} />
+          </Link>
+        </div>
+        <Link
+          className="mt-auto flex h-16 w-16 items-center justify-center bg-indigo-800 text-white hover:bg-primary-purple-100"
+          href="#"
         >
-          <Link href={"/bridge/dashboard"}>Dashboard</Link>
-        </NavButton>
-        <NavButton
-          icon={<ActivityLogIcon />}
-          variant={"ghost"}
-          className="w-full"
-        >
-          <Link href={"/bridge/onboarding"}>Onboarding</Link>
-        </NavButton>
-
-        {isVerified && (
-          <>
-            <NavButton
-              icon={<AvatarIcon />}
-              variant={"ghost"}
-              className="w-full text-left"
-            >
-              <Link href={"/bridge/patients"}>Patients</Link>
-            </NavButton>
-            <NavButton
-              icon={<HeartIcon />}
-              variant={"ghost"}
-              className="w-full"
-            >
-              <Link href={"/bridge/machines"}>ECMOS</Link>
-            </NavButton>
-          </>
-        )}
-        <NavButton icon={<GearIcon />} variant={"ghost"} className="w-full">
-          <Link href={"/bridge/profile"}>Settings</Link>
-        </NavButton>
+          <LogOutIcon size={24} />
+        </Link>
       </div>
 
-      {/* Smaller screens (<768px or "md" breakpoint in Tailwind) */}
-      <div className="flex min-h-screen min-w-[50px] flex-col items-center border-r-[0.5px] border-gray-300 bg-white p-2 md:hidden">
-        <Image width={25} height={25} src="/favicon.ico" alt="Logo" />
-        <NavButton variant={"ghost"} className="w-full items-center">
-          <Link href={"/bridge/dashboard"} className="items-center">
-            <DashboardIcon />
+      {isHovered && (
+        <div
+          id="second"
+          className={`duration-8000 flex h-full w-40 flex-col items-center overflow-hidden rounded bg-primary-purple-900 text-white transition-all ease-in-out`}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <Link
+            className="mt-3 flex w-full items-center justify-center px-3"
+            href="/"
+          >
+            <svg
+              className="h-8 w-8 fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z" />
+            </svg>
           </Link>
-        </NavButton>
-        <NavButton variant={"ghost"} className="w-full">
-          <Link href={"/bridge/onboarding"}>
-            <ActivityLogIcon />
-          </Link>
-        </NavButton>
-
-        {isVerified && (
-          <>
-            <NavButton variant={"ghost"} className="w-full text-left">
-              <Link href={"/bridge/patients"}>
-                <AvatarIcon />
+          <div className="w-full px-2">
+            <div className="mt-3 flex w-full flex-col items-center border-t border-gray-700">
+              <Link
+                className="mt-2 flex h-12 w-full items-center rounded px-3 hover:bg-primary-purple-100"
+                href="/bridge/dashboard"
+              >
+                <HomeIcon size={24} />
+                <span className="ml-2 text-sm font-medium">Dashboard</span>
               </Link>
-            </NavButton>
-            <NavButton variant={"ghost"} className="w-full">
-              <Link href={"/bridge/machines"}>
-                <HeartIcon />
+              <Link
+                className="mt-2 flex h-12 w-full items-center rounded px-3 hover:bg-primary-purple-100"
+                href="/bridge/patients"
+              >
+                <UserRoundPlusIcon size={24} />
+                <span className="ml-2 text-sm font-medium">Patients</span>
               </Link>
-            </NavButton>
-          </>
-        )}
-        <NavButton variant={"ghost"} className="w-full">
-          <Link href={"/bridge/profile"}>
-            <GearIcon />
+              <Link
+                className="mt-2  flex h-12 w-full items-center rounded px-3 hover:bg-primary-purple-100 "
+                href="/bridge/machines"
+              >
+                <ActivityIcon size={24} />
+                <span className="ml-2 text-sm font-medium">ECMOs</span>
+              </Link>
+            </div>
+            <div className="mt-2 flex w-full flex-col items-center border-t border-gray-700">
+              <Link
+                className="mt-2 flex h-12 w-full items-center rounded px-3 hover:bg-primary-purple-100"
+                href="/bridge/settings"
+              >
+                <SettingsIcon size={24} />
+                <span className="ml-2 text-sm font-medium">Settings</span>
+              </Link>
+              <Link
+                className="mt-2 flex h-12 w-full items-center rounded px-3 hover:bg-primary-purple-100"
+                href="/bridge/profile"
+              >
+                <User2Icon size={24} />
+                <span className="ml-2 text-sm font-medium">Profile</span>
+              </Link>
+            </div>
+          </div>
+          <Link
+            className="mt-auto flex h-16 w-full items-center justify-center bg-indigo-800 hover:bg-primary-purple-100"
+            href="#"
+          >
+            <LogOutIcon size={24} />
+            <span className="ml-2 text-sm font-medium">Logout</span>
           </Link>
-        </NavButton>
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -6,15 +6,15 @@ const DashboardPage = async () => {
   const hospital = await api.hospital.get();
   const verified = hospital?.isVerified;
   return (
-    <div className="flex flex-col items-start justify-center space-y-2 p-10">
-      <h1 className="text-3xl font-bold">
+    <div className="flex flex-col items-start justify-center space-y-2 p-10 ">
+      <h1 className="flex flex-row items-center gap-2 text-3xl font-bold">
         Dashboard{" "}
         {verified ? (
-          <Badge className="font-normal" color={"green"}>
+          <Badge className="h-[70%] font-normal" color={"green"}>
             Verified
           </Badge>
         ) : (
-          <Badge className="font-normal" color={"red"}>
+          <Badge className="h-[70%] font-normal" color={"red"}>
             Not verified
           </Badge>
         )}

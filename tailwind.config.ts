@@ -1,5 +1,8 @@
 import type { Config } from "tailwindcss";
-
+const svgToDataUri = require("mini-svg-data-uri");
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
 import colors from "tailwindcss/colors";
 
 const config = {
@@ -24,6 +27,66 @@ const config = {
     },
     extend: {
       colors: {
+        "washed-purple": {
+          "50": "#f8f7ff",
+          "100": "#e8e7ff",
+          "200": "#dddcff",
+          "300": "#cdcbff",
+          "400": "#c4c1ff",
+          "500": "#b5b2ff",
+          "600": "#a5a2e8",
+          "700": "#817eb5",
+          "800": "#64628c",
+          "900": "#4c4b6b",
+        },
+        "washed-blue": {
+          "50": "#f0f3ff",
+          "100": "#d0daff",
+          "200": "#bac9ff",
+          "300": "#9ab0ff",
+          "400": "#86a1ff",
+          "500": "#6889ff",
+          "600": "#5f7de8",
+          "700": "#4a61b5",
+          "800": "#394b8c",
+          "900": "#2c3a6b",
+        },
+        "primary-blue": {
+          "50": "#e6f0ff",
+          "100": "#b1d1ff",
+          "200": "#8cbaff",
+          "300": "#579bff",
+          "400": "#3687ff",
+          "500": "#0469ff",
+          "600": "#0460e8",
+          "700": "#034bb5",
+          "800": "#023a8c",
+          "900": "#022c6b",
+        },
+        "primary-purple": {
+          "50": "#f1e6ff",
+          "100": "#d3b0ff",
+          "200": "#bd8aff",
+          "300": "#9f54ff",
+          "400": "#8d33ff",
+          "500": "#7000ff",
+          "600": "#6600e8",
+          "700": "#5000b5",
+          "800": "#3e008c",
+          "900": "#2f006b",
+        },
+        neutrals: {
+          "1": "#e6e6e8",
+          "2": "#c3c2c7",
+          "3": "#93919a",
+          "4": "#605e6b",
+          "5": "#302e3e",
+          "6": "#030014",
+          "7": "#030011",
+          "8": "#02000e",
+          "9": "#02000b",
+          "10": "#010009",
+        },
         // light mode
         tremor: {
           brand: {
@@ -193,7 +256,37 @@ const config = {
         /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
   ],
-  plugins: [require("tailwindcss-animate"), require("@headlessui/tailwindcss")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@headlessui/tailwindcss"),
+    addVariablesForColors,
+    function ({ matchUtilities, theme }: any) {
+      matchUtilities(
+        {
+          "bg-dot-thick": (value: any) => ({
+            backgroundImage: `url("${svgToDataUri(
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="2.5"></circle></svg>`,
+            )}")`,
+          }),
+        },
+        {
+          values: flattenColorPalette(theme("backgroundColor")),
+          type: "color",
+        },
+      );
+    },
+  ],
 } satisfies Config;
+
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}
 
 export default config;

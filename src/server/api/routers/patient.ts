@@ -4,6 +4,7 @@ import { patients, specialCare } from "~/server/db/schema";
 import { checkAuth } from "../functions";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
+import { Elsie_Swash_Caps } from "next/font/google";
 
 const newPatientSchema = z.object({
   name: z.string().min(1).max(100),
@@ -34,6 +35,23 @@ const editPatientSchema = z.object({
   ecmoType: z.enum(["PULMONARY", "CARDIAC", "ECPR"]).optional(),
 });
 
+function computeScore(specialCare: string) {
+  switch (specialCare) {
+    case "PEDIATRIC":
+      return 5;
+    case "FIRST_RESPONDERS":
+      return 4;
+    case "SINGLE_CARETAKERS":
+      return 3;
+    case "PREGNANT_PATIENTS":
+      return 2;
+    case "SHORT_TERM_SURVIVAL":
+      return 1;
+    default:
+      return 0; // Default score for unspecified or unknown categories
+  }
+}
+
 export const patientRouter = createTRPCRouter({
   create: publicProcedure
     .input(newPatientSchema)
@@ -50,12 +68,14 @@ export const patientRouter = createTRPCRouter({
         throw new Error("Hospital not found");
       }
 
+      const score = computeScore(input.specialCare);
+
       const newPatient = await ctx.db.insert(patients).values({
         hospitalId: hospital.id,
         name: input.name,
         coordinates: hospital.coordinates,
         age: input.age,
-        score: 0,
+        score: score,
         specialCare: input.specialCare,
         ecmoType: input.ecmoType,
       });
@@ -74,13 +94,19 @@ export const patientRouter = createTRPCRouter({
       if (!patient) {
         throw new Error("Patient not found");
       }
+      let score = 0;
+      if (input.specialCare) {
+        score = computeScore(input.specialCare);
+      } else {
+        score = patient.score;
+      }
 
       return await ctx.db
         .update(patients)
         .set({
           name: input.name,
           age: input.age,
-          score: 0,
+          score: score,
           specialCare: input.specialCare,
           ecmoType: input.ecmoType,
         })
@@ -124,4 +150,7 @@ export const patientRouter = createTRPCRouter({
 
       return await ctx.db.delete(patients).where(eq(patients.id, input.id));
     }),
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.patients.findMany();
+  }),
 });
