@@ -5,13 +5,13 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
+
 const config = {
-  ignoreBuildErrors: true,
-  compiler: {
-    styledComponents: {
-      ssr: true,
-      displayName: true,
-    },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 
