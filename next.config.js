@@ -13,7 +13,6 @@ const config = {
   compiler: {
     styledComponents: true,
     styledJsx: true,
-    emotion: true,
   },
   optimizeFonts: false,
   eslint: {
