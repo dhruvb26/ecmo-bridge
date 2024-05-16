@@ -10,6 +10,9 @@ const config = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  compiler: {
+    styledComponents: true,
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

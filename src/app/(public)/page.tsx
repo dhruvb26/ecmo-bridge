@@ -11,7 +11,7 @@ import Navbar from "~/components/main-navbar";
 export default function HomePage() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="relative bg-gradient-to-b from-primary-purple-900 via-primary-purple-500 to-primary-purple-300">
         <section className="relative min-h-screen pb-10 pt-24 sm:pb-16 sm:pt-32 lg:pb-24">
           {/* <div className="absolute inset-x-0 bottom-0 z-10 hidden lg:flex">
@@ -47,7 +47,7 @@ export default function HomePage() {
               </SignedOut>
               <SignedIn>
                 <button className="mt-8 inline-flex items-center rounded-lg bg-washed-purple-800 p-12 px-6 py-4 font-semibold text-white transition-all duration-200 hover:bg-washed-purple-400 focus:bg-washed-purple-800 sm:mt-16">
-                  <Link href="">Learn More</Link>
+                  <Link href="/about">Learn More</Link>
 
                   <ArrowRightCircle className="ml-4" size={24} />
                 </button>

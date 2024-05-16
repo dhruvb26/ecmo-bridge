@@ -35,7 +35,7 @@ export async function MatchedPatients() {
           size="sm"
           className="ml-auto gap-1 bg-primary-purple-900"
         >
-          <Link href="/bridge/patients">
+          <Link href="/bridge/match-list">
             Match List
             <ArrowUpRight className="h-4 w-4" />
           </Link>

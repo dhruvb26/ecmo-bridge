@@ -11,6 +11,7 @@
     /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "checkJs": true,
     /* Bundled projects */
     "lib": ["dom", "dom.iterable", "ES2022"],

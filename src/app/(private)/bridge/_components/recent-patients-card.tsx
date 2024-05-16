@@ -37,7 +37,7 @@ export async function RecentPatients() {
           size="sm"
           className="ml-auto gap-1 bg-primary-purple-900"
         >
-          <Link href="/bridge/patients">
+          <Link href="/bridge/patients-and-ecmos">
             View All
             <ArrowUpRight className="h-4 w-4" />
           </Link>

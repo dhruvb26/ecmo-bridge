@@ -33,6 +33,16 @@ const Navbar = () => {
             <Link href="/">Home</Link>
           </Button>
         </NavigationMenuItem>
+        <NavigationMenuItem asChild>
+          <Button variant={"link"} className="text-white md:text-secondary">
+            <Link href="/about">About</Link>
+          </Button>
+        </NavigationMenuItem>
+        <NavigationMenuItem asChild>
+          <Button variant={"link"} className="text-white md:text-secondary">
+            <Link href="/contact">Contact</Link>
+          </Button>
+        </NavigationMenuItem>
         <SignedIn>
           <NavigationMenuItem asChild>
             <Button variant={"link"} className="text-white md:text-secondary">
