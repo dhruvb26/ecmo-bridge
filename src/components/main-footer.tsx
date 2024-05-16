@@ -3,9 +3,7 @@ import { ArrowUp } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { SignedIn } from "@clerk/nextjs";
-import { be } from "date-fns/locale";
 import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
 
 const Footer = () => {
   return (
@@ -48,7 +46,7 @@ const Footer = () => {
 
             <SignedIn>
               <li>
-                <Button variant={"link"} className="text-center text-white">
+                <Button variant={"link"} className=" text-white">
                   <Link href="/bridge/dashboard">Dashboard</Link>
                 </Button>
               </li>

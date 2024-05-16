@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,14 +14,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { getCurrentDateTime } from "~/server/api/functions";
@@ -117,64 +109,58 @@ export function ProfileForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <Card className="flex w-[40%] flex-col items-center p-4 pb-10">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Your Profile</CardTitle>
-          <CardDescription className="text-md">
-            Fill in the information to get verified.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="w-[60%]">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col space-y-8"
-            >
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="For eg: Phoenix Children"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      This is your hospital's name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="my-input-searchbox"
-                        ref={inputRef}
-                        placeholder="Choose..."
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Choose the location for your hospital.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Submit</Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col space-y-8"
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="For eg: Phoenix Children" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your hospital's name. This name will be displayed
+                everywhere including the match-list.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location</FormLabel>
+              <FormControl>
+                <Input
+                  id="my-input-searchbox"
+                  ref={inputRef}
+                  placeholder="Choose..."
+                />
+              </FormControl>
+              <FormDescription>
+                Choose the location for your hospital. This is used to calculate
+                coordinates of your hospital.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div>
+          <Button
+            type="submit"
+            className="bg-primary-purple-900 hover:bg-primary-purple-400"
+          >
+            Submit
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

@@ -13,39 +13,6 @@ import {
 } from "~/components/ui/table";
 
 const MatchList = () => {
-  const ecmoQuery = api.ecmo.getAll.useQuery();
-  const patientQuery = api.patient.get.useQuery();
-
-  const ecmos = ecmoQuery.data;
-  const patients = patientQuery.data;
-
-  const matches: any = {};
-
-  patients?.forEach((patient) => {
-    let matchFound = false;
-
-    if (ecmos) {
-      for (let ecmo of ecmos) {
-        if (
-          ecmo.type === patient.ecmoType &&
-          !ecmo.inUse &&
-          !ecmo.isMatched &&
-          !matchFound
-        ) {
-          matchFound = true;
-          if (!matches[patient.id]) {
-            matches[patient.id] = [];
-          }
-          matches[patient.id].push(ecmo);
-          ecmo.isMatched = true; // Prevent this ECMO from being matched again
-        }
-      }
-    }
-    if (!matchFound) {
-      matches[patient.id] = []; // Assign an empty array if no match found
-    }
-  });
-
   return (
     <div className="p-10">
       <Table>

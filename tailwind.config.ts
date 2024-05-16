@@ -90,6 +90,7 @@ const config = {
         // light mode
         tremor: {
           brand: {
+            purple: "#2f006b",
             faint: colors.blue[50],
             muted: colors.blue[200],
             subtle: colors.blue[400],

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import { Button } from "./ui/button";
 import { cn } from "~/lib/utils";
 import { Avatar } from "./ui/avatar";
@@ -29,23 +28,23 @@ const Navbar = () => {
     <NavigationMenu>
       <NavigationMenuList className="flex flex-col space-y-2   md:flex-row md:items-center md:space-x-2 md:space-y-0 md:bg-transparent">
         <NavigationMenuItem asChild>
-          <Button variant={"link"} className="text-white md:text-secondary">
+          <Button variant={"link"} className="text-black md:text-white">
             <Link href="/">Home</Link>
           </Button>
         </NavigationMenuItem>
         <NavigationMenuItem asChild>
-          <Button variant={"link"} className="text-white md:text-secondary">
+          <Button variant={"link"} className="text-black md:text-white">
             <Link href="/about">About</Link>
           </Button>
         </NavigationMenuItem>
         <NavigationMenuItem asChild>
-          <Button variant={"link"} className="text-white md:text-secondary">
+          <Button variant={"link"} className="text-black md:text-white">
             <Link href="/contact">Contact</Link>
           </Button>
         </NavigationMenuItem>
         <SignedIn>
           <NavigationMenuItem asChild>
-            <Button variant={"link"} className="text-white md:text-secondary">
+            <Button variant={"link"} className="text-black md:text-white">
               <Link href="/bridge/dashboard">Dashboard</Link>
             </Button>
           </NavigationMenuItem>
