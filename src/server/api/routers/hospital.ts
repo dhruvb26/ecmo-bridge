@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { hospitals } from "~/server/db/schema";
+import { ecmoType, hospitals } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { checkAuth } from "../functions";
 

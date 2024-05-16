@@ -1,9 +1,9 @@
 import React from "react";
 import { api } from "~/trpc/server";
 import { PatientForm } from "../_components/patient-form";
-import { DataTable } from "./data-table";
+import { PatientDataTable } from "./data-table";
 
-import { columns } from "./columns";
+import { PatientColumns } from "./columns";
 
 const PatientsPage = async () => {
   const patientCount = await api.patient.getCount();
@@ -21,7 +21,7 @@ const PatientsPage = async () => {
           </p>
         </div>
         <div className="w-[80%] p-2 lg:flex-row lg:space-x-2 lg:space-y-0">
-          <DataTable data={patients} columns={columns} />
+          <PatientDataTable data={patients} columns={PatientColumns} />
         </div>
       </div>
     </>

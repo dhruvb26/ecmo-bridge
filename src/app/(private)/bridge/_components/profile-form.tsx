@@ -118,7 +118,7 @@ export function ProfileForm() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <Card className="flex w-[60%] flex-col items-center p-4 pb-10">
+      <Card className="flex w-[40%] flex-col items-center p-4 pb-10">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Your Profile</CardTitle>
           <CardDescription className="text-md">

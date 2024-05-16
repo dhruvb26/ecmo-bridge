@@ -5,6 +5,7 @@ import { ThemeProvider } from "~/components/ui/theme-provider";
 import Navbar from "~/components/main-navbar";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
+import Header from "./_components/header";
 export const metadata = {
   title: "ECMO Bridge",
   description: "Bridge the gap between ECMO patients and machines.",

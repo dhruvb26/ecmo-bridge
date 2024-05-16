@@ -47,7 +47,7 @@ export type ECMO = {
   inUse: boolean;
 };
 
-export const columns: ColumnDef<ECMO>[] = [
+export const ECMOColumns: ColumnDef<ECMO>[] = [
   {
     accessorKey: "model",
     header: ({ column }) => {

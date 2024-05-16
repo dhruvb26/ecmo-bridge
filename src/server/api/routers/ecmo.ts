@@ -20,6 +20,11 @@ const editEcmoSchema = z.object({
   inUse: z.boolean().default(false).optional(),
 });
 
+const getEcmoSchema = z.object({
+  type: z.enum(["PULMONARY", "CARDIAC", "ECPR"]).optional(),
+  inUse: z.boolean().optional(),
+});
+
 export const ecmoRouter = createTRPCRouter({
   create: publicProcedure
     .input(newEcmoSchema)
@@ -111,5 +116,27 @@ export const ecmoRouter = createTRPCRouter({
     }),
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.ecmos.findMany();
+  }),
+  getBy: publicProcedure.input(getEcmoSchema).query(async ({ ctx, input }) => {
+    const userId = checkAuth();
+
+    const hospital = await ctx.db.query.hospitals.findFirst({
+      where: (model, { eq }) => eq(model.userId, userId),
+    });
+
+    if (!hospital) {
+      throw new Error("Hospital not found");
+    }
+
+    return await ctx.db.query.ecmos.findMany({
+      where: (model, { eq }) => {
+        if (input.type) {
+          return eq(model.type, input.type);
+        }
+        if (input.inUse) {
+          return eq(model.inUse, input.inUse);
+        }
+      },
+    });
   }),
 });

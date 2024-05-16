@@ -1,10 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { patients, specialCare } from "~/server/db/schema";
+import { patients } from "~/server/db/schema";
 import { checkAuth } from "../functions";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
-import { Elsie_Swash_Caps } from "next/font/google";
 
 const newPatientSchema = z.object({
   name: z.string().min(1).max(100),
@@ -23,6 +22,19 @@ const editPatientSchema = z.object({
   id: z.number(),
   name: z.string().min(1).max(100).optional(),
   age: z.number().min(1).max(150).optional(),
+  specialCare: z
+    .enum([
+      "PEDIATRIC",
+      "FIRST_RESPONDERS",
+      "SINGLE_CARETAKERS",
+      "PREGNANT_PATIENTS",
+      "SHORT_TERM_SURVIVAL",
+    ])
+    .optional(),
+  ecmoType: z.enum(["PULMONARY", "CARDIAC", "ECPR"]).optional(),
+});
+
+const getPatientSchema = z.object({
   specialCare: z
     .enum([
       "PEDIATRIC",
@@ -153,4 +165,41 @@ export const patientRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.patients.findMany();
   }),
+  getBy: publicProcedure
+    .input(getPatientSchema)
+    .query(async ({ ctx, input }) => {
+      const userId = checkAuth();
+
+      const hospital = await ctx.db.query.hospitals.findFirst({
+        where: (model, { eq }) => eq(model.userId, userId),
+      });
+
+      if (!hospital) {
+        throw new Error("Hospital not found");
+      }
+
+      return await ctx.db.query.patients.findMany({
+        where: (model, { eq, and }) => {
+          if (input.ecmoType && input.specialCare) {
+            return and(
+              eq(model.hospitalId, hospital.id),
+              eq(model.ecmoType, input.ecmoType),
+              eq(model.specialCare, input.specialCare),
+            );
+          } else if (input.ecmoType) {
+            return and(
+              eq(model.hospitalId, hospital.id),
+              eq(model.ecmoType, input.ecmoType),
+            );
+          } else if (input.specialCare) {
+            return and(
+              eq(model.hospitalId, hospital.id),
+              eq(model.specialCare, input.specialCare),
+            );
+          } else {
+            throw new Error("Either ecmoType or specialCare must be provided");
+          }
+        },
+      });
+    }),
 });

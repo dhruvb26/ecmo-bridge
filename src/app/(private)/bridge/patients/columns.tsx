@@ -55,7 +55,7 @@ const editPatientSchema = z.object({
   age: z.number().min(1).max(100),
 });
 
-export const columns: ColumnDef<Patient>[] = [
+export const PatientColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -133,13 +133,14 @@ export const columns: ColumnDef<Patient>[] = [
     },
     cell: ({ getValue }) => {
       const value = getValue() as string;
-      const formattedValue = value
-        .toString()
-        .toLowerCase()
-        .replace(/_/g, " ")
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+      const formattedValue = value.startsWith("E")
+        ? value.toUpperCase()
+        : value
+            .toLowerCase()
+            .replace(/_/g, " ")
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
 
       return <div className="text-center font-medium">{formattedValue}</div>;
     },

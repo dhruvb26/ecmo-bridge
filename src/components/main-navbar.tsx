@@ -62,13 +62,14 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between lg:h-20">
           <div className="flex-shrink-0">
             <Link href="/" className="flex">
-              <Image
+              {/* <Image
                 height={32}
                 width={32}
                 className="h-8 w-auto"
                 src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/5/logo.svg"
                 alt=""
-              />
+              /> */}
+              <span className="text-2xl font-bold text-white">ECMO Bridge</span>
             </Link>
           </div>
         </div>

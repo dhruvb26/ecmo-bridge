@@ -124,7 +124,7 @@ export function PatientForm() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="For eg: Phoenix Children" {...field} />
+                    <Input placeholder="For eg: John Doe" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your patient's name.

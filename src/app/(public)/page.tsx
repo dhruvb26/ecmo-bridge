@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <div className="from-primary-purple-900 via-primary-purple-500 to-primary-purple-100 relative bg-gradient-to-b">
+      <div className="relative bg-gradient-to-b from-primary-purple-900 via-primary-purple-500 to-primary-purple-300">
         <section className="relative min-h-screen pb-10 pt-24 sm:pb-16 sm:pt-32 lg:pb-24">
           {/* <div className="absolute inset-x-0 bottom-0 z-10 hidden lg:flex">
             <img
@@ -39,14 +39,14 @@ export default function HomePage() {
                 patient-machine matching platform.
               </p>
               <SignedOut>
-                <button className="bg-washed-purple-800 hover:bg-washed-purple-400 focus:bg-washed-purple-800 mt-8 inline-flex items-center rounded-lg p-12 px-6 py-4 font-semibold text-white transition-all duration-200 sm:mt-16">
+                <button className="mt-8 inline-flex items-center rounded-lg bg-washed-purple-800 p-12 px-6 py-4 font-semibold text-white transition-all duration-200 hover:bg-washed-purple-400 focus:bg-washed-purple-800 sm:mt-16">
                   <SignInButton>Get Started</SignInButton>
 
                   <ArrowRightCircle className="ml-4" size={24} />
                 </button>
               </SignedOut>
               <SignedIn>
-                <button className="bg-washed-purple-800 hover:bg-washed-purple-400 focus:bg-washed-purple-800 mt-8 inline-flex items-center rounded-lg p-12 px-6 py-4 font-semibold text-white transition-all duration-200 sm:mt-16">
+                <button className="mt-8 inline-flex items-center rounded-lg bg-washed-purple-800 p-12 px-6 py-4 font-semibold text-white transition-all duration-200 hover:bg-washed-purple-400 focus:bg-washed-purple-800 sm:mt-16">
                   <Link href="">Learn More</Link>
 
                   <ArrowRightCircle className="ml-4" size={24} />

@@ -47,7 +47,7 @@ const MatchList = () => {
   });
 
   return (
-    <div>
+    <div className="p-10">
       <Table>
         <TableCaption>
           A list of matched ECMO machines to patients.
@@ -59,32 +59,7 @@ const MatchList = () => {
             <TableHead className="w-1/3 text-right">Machine Info</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {patients?.map((patient) => {
-            const patientEcmos = matches[patient.id] || [];
-
-            return patientEcmos.length > 0 ? (
-              patientEcmos.map((ecmoMachine, index) => (
-                <TableRow key={`${patient.id}-${ecmoMachine.id}-${index}`}>
-                  <TableCell>{patient.name}</TableCell>
-                  <TableCell>{patient.ecmoType}</TableCell>
-                  <TableCell className="w-full text-center">
-                    <DistanceComponent
-                      patientCoordinates={patient.coordinates}
-                      ecmoCoordinates={ecmoMachine.coordinates}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow key={`no-match-${patient.id}`}>
-                <TableCell>{patient.name}</TableCell>
-                <TableCell>{patient.ecmoType}</TableCell>
-                <TableCell className="text-right">No matches found</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
+        <TableBody></TableBody>
       </Table>
     </div>
   );
