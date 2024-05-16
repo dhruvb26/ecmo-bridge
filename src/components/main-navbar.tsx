@@ -29,13 +29,13 @@ const Navbar = () => {
     <NavigationMenu>
       <NavigationMenuList className="flex flex-col space-y-2   md:flex-row md:items-center md:space-x-2 md:space-y-0 md:bg-transparent">
         <NavigationMenuItem asChild>
-          <Button variant={"link"} className="text-black md:text-secondary">
+          <Button variant={"link"} className="text-white md:text-secondary">
             <Link href="/">Home</Link>
           </Button>
         </NavigationMenuItem>
         <SignedIn>
           <NavigationMenuItem asChild>
-            <Button variant={"link"} className="text-black md:text-secondary">
+            <Button variant={"link"} className="text-white md:text-secondary">
               <Link href="/bridge/dashboard">Dashboard</Link>
             </Button>
           </NavigationMenuItem>
