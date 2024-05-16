@@ -13,6 +13,7 @@ const config = {
   compiler: {
     styledComponents: true,
   },
+  optimizeFonts: false,
   eslint: {
     ignoreDuringBuilds: true,
   },

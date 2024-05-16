@@ -3,9 +3,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import Navbar from "~/components/main-navbar";
+import Footer from "~/components/main-footer";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "~/lib/utils";
-import Header from "./_components/header";
+
 export const metadata = {
   title: "ECMO Bridge",
   description: "Bridge the gap between ECMO patients and machines.",
@@ -35,6 +36,7 @@ export default function RootLayout({
             >
               <Navbar />
               {children}
+              <Footer />
             </ThemeProvider>
           </TRPCReactProvider>
         </body>

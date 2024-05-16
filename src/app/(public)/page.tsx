@@ -6,12 +6,10 @@ import { UsersIcon } from "lucide-react";
 import { CheckSquare } from "lucide-react";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { LockIcon } from "lucide-react";
-import Navbar from "~/components/main-navbar";
 
 export default function HomePage() {
   return (
     <>
-      {/* <Navbar /> */}
       <div className="relative bg-gradient-to-b from-primary-purple-900 via-primary-purple-500 to-primary-purple-300">
         <section className="relative min-h-screen pb-10 pt-24 sm:pb-16 sm:pt-32 lg:pb-24">
           {/* <div className="absolute inset-x-0 bottom-0 z-10 hidden lg:flex">
@@ -63,9 +61,7 @@ export default function HomePage() {
 
                 <div className="flex items-center">
                   <CheckSquare className="text-white" />
-                  <p className="ml-3 text-sm text-white">
-                    No charges. No hidden fees
-                  </p>
+                  <p className="ml-3 text-sm text-white">No charges</p>
                 </div>
 
                 <div className="flex items-center">

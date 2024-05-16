@@ -19,12 +19,11 @@ export default function RootLayout({
           >
             <TRPCReactProvider>
               <Sidebar />
-              <main className="h-full w-full">
-                {/* <Header /> */}
-                {children}
-              </main>
+              <main className="h-full w-full">{children}</main>
               <Toaster />
-              <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6p47Gmzx-LGcoMCBjISxYqi42871sznA&libraries=places"></script>
+              <script
+                src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+              ></script>
             </TRPCReactProvider>
           </body>
         </html>
