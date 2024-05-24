@@ -4,6 +4,7 @@ import { ecmos } from "~/server/db/schema";
 import { checkAuth } from "../functions";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
+import { matchingLogic, deleteMatch } from "./match";
 
 const newEcmoSchema = z.object({
   model: z.string().min(1).max(100),
@@ -49,6 +50,7 @@ export const ecmoRouter = createTRPCRouter({
         serial: input.serial,
         type: input.type,
         inUse: input.inUse,
+        updatedAt: new Date(),
       });
 
       return newEcmo;
@@ -66,6 +68,8 @@ export const ecmoRouter = createTRPCRouter({
         throw new Error("ECMO not found");
       }
 
+      await deleteMatch(ctx, { ecmoId: ecmo.id });
+
       return await ctx.db
         .update(ecmos)
         .set({
@@ -73,6 +77,7 @@ export const ecmoRouter = createTRPCRouter({
           serial: input.serial,
           type: input.type,
           inUse: input.inUse,
+          updatedAt: new Date(),
         })
         .where(eq(ecmos.id, ecmo.id));
     }),
@@ -111,6 +116,8 @@ export const ecmoRouter = createTRPCRouter({
     .input(editEcmoSchema)
     .mutation(async ({ ctx, input }) => {
       const userId = checkAuth();
+
+      await deleteMatch(ctx, { ecmoId: input.id });
 
       return await ctx.db.delete(ecmos).where(eq(ecmos.id, input.id));
     }),

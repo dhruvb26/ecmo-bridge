@@ -45,13 +45,13 @@ const SettingsPage = async () => {
           <h2 className="text-lg">{hospital.location}</h2>
           <Callout
             icon={QuestionMarkCircledIcon}
-            title="Need to Update Your Information?"
+            title="Need to update your information?"
             color="purple"
           >
             If you need to update your hospital's information or have any
             questions, please reach out to us.{" "}
-            <Link href="/contact" className="hover:underline">
-              Contact us &gt;
+            <Link href="/about" className="hover:underline">
+              Learn more &gt;
             </Link>
           </Callout>
         </div>

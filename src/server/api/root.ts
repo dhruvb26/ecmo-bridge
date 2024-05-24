@@ -1,6 +1,7 @@
 import { hospitalRouter } from "~/server/api/routers/hospital";
 import { patientRouter } from "~/server/api/routers/patient";
 import { ecmoRouter } from "~/server/api/routers/ecmo";
+import { matchRouter } from "~/server/api/routers/match";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -12,6 +13,7 @@ export const appRouter = createTRPCRouter({
   hospital: hospitalRouter,
   patient: patientRouter,
   ecmo: ecmoRouter,
+  match: matchRouter,
 });
 
 // export type definition of API

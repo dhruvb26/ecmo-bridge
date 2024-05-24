@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { ecmoType, hospitals } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { hospitals } from "~/server/db/schema";
 import { checkAuth } from "../functions";
 
 export const createHospitalSchema = z.object({
@@ -30,17 +29,11 @@ export const hospitalRouter = createTRPCRouter({
           location: input.location,
           coordinates: input.coordinates,
           isVerified: true,
+          updatedAt: new Date(),
         });
       }
 
-      return await ctx.db
-        .update(hospitals)
-        .set({
-          name: input.name,
-          location: input.location,
-          coordinates: input.coordinates,
-        })
-        .where(eq(hospitals.id, hospital.id));
+      throw new Error("Hospital already exists");
     }),
 
   get: publicProcedure.query(async ({ ctx }) => {

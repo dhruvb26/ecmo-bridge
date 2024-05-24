@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { relations, sql } from "drizzle-orm";
+import { is, relations, sql } from "drizzle-orm";
 import {
   index,
   pgTableCreator,
@@ -12,6 +12,9 @@ import {
   json,
   pgEnum,
   integer,
+  decimal,
+  numeric,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -57,13 +60,18 @@ export const patients = createTable("patients", {
   age: integer("age").notNull(),
   score: integer("score").notNull(),
   specialCare: specialCare("specialCare").notNull(), // Using SpecialCareCategory enum
-  hospitalId: integer("hospitalId").references(() => hospitals.id),
+  hospitalId: integer("hospitalId")
+    .references(() => hospitals.id)
+    .notNull(),
+  isMatched: boolean("is_matched").default(false).notNull(),
   ecmoType: ecmoType("ecmoType").notNull(), // ECMOType is optional
   coordinates: json("coordinates").notNull(), // Added JSON type for coordinates
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export const ecmos = createTable("ecmos", {
@@ -73,15 +81,60 @@ export const ecmos = createTable("ecmos", {
   inUse: boolean("in_use").default(false).notNull(),
   isMatched: boolean("is_matched").default(false).notNull(),
   coordinates: json("coordinates").notNull(),
-  hospitalId: integer("hospitalId").references(() => hospitals.id),
+  hospitalId: integer("hospitalId")
+    .references(() => hospitals.id)
+    .notNull(),
   type: ecmoType("type").notNull(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at").notNull(),
 });
+
+export const matches = createTable("matches", {
+  id: serial("id").primaryKey().unique(),
+  patientId: integer("patient_id")
+    .references(() => patients.id)
+    .notNull(),
+  hospitalId: integer("hospital_id")
+    .references(() => hospitals.id)
+    .notNull(),
+  ecmoId: integer("ecmo_id"),
+  distance: doublePrecision("distance"),
+  duration: doublePrecision("duration"),
+  location: varchar("location", { length: 256 }),
+  matchedAt: timestamp("matched_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const matchesRelations = relations(matches, ({ one }) => ({
+  patient: one(patients, {
+    fields: [matches.patientId],
+    references: [patients.id],
+  }),
+  hospital: one(hospitals, {
+    fields: [matches.hospitalId],
+    references: [hospitals.id],
+  }),
+}));
 
 export const hospitalsRelations = relations(hospitals, ({ many }) => ({
   patients: many(patients),
   ecmos: many(ecmos),
+  matches: many(matches),
+}));
+
+export const patientsRelations = relations(patients, ({ one }) => ({
+  hospital: one(hospitals, {
+    fields: [patients.hospitalId],
+    references: [hospitals.id],
+  }),
+}));
+
+export const ecmosRelations = relations(ecmos, ({ one }) => ({
+  hospital: one(hospitals, {
+    fields: [ecmos.hospitalId],
+    references: [hospitals.id],
+  }),
 }));

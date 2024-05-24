@@ -28,23 +28,37 @@ const Navbar = () => {
     <NavigationMenu>
       <NavigationMenuList className="flex flex-col space-y-2   md:flex-row md:items-center md:space-x-2 md:space-y-0 md:bg-transparent">
         <NavigationMenuItem asChild>
-          <Button variant={"link"} className="text-black md:text-white">
+          <Button
+            variant={"link"}
+            className="text-primary-purple-700 md:text-white"
+          >
             <Link href="/">Home</Link>
           </Button>
         </NavigationMenuItem>
         <NavigationMenuItem asChild>
-          <Button variant={"link"} className="text-black md:text-white">
+          <Button
+            variant={"link"}
+            className="text-primary-purple-700 md:text-white"
+          >
             <Link href="/about">About</Link>
           </Button>
         </NavigationMenuItem>
         <NavigationMenuItem asChild>
-          <Button variant={"link"} className="text-black md:text-white">
-            <Link href="/contact">Contact</Link>
+          <Button
+            variant={"link"}
+            className="text-primary-purple-700 md:text-white"
+          >
+            <Link href="https://mail.google.com/mail/?view=cm&fs=1&to=amras@asu.edu">
+              Contact
+            </Link>
           </Button>
         </NavigationMenuItem>
         <SignedIn>
           <NavigationMenuItem asChild>
-            <Button variant={"link"} className="text-black md:text-white">
+            <Button
+              variant={"link"}
+              className="text-primary-purple-700 md:text-white"
+            >
               <Link href="/bridge/dashboard">Dashboard</Link>
             </Button>
           </NavigationMenuItem>
@@ -99,7 +113,7 @@ const Navbar = () => {
                 </Button>
               </DrawerClose>
             </DrawerDescription>
-            <DrawerHeader className="flex h-full flex-row items-center justify-center">
+            <DrawerHeader className="flex h-full flex-row items-center justify-center bg-white ">
               {MenuContent()}
             </DrawerHeader>
           </DrawerContent>

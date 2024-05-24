@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 import { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -28,6 +29,7 @@ const formSchema = z.object({
   }),
 });
 export function ProfileForm() {
+  const [error, setError] = useState(false);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null); // Strongly typed ref for TypeScript
 
@@ -105,7 +107,14 @@ export function ProfileForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    createHospital.mutate(values);
+    try {
+      createHospital.mutate(values);
+    } catch (e) {
+      toast.error("Error updating hospital info.");
+    }
+  }
+  if (error) {
+    return <div>Error</div>;
   }
 
   return (

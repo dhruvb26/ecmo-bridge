@@ -4,6 +4,8 @@ import { patients } from "~/server/db/schema";
 import { checkAuth } from "../functions";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
+import { deleteMatch } from "./match";
+import { matchingLogic } from "./match";
 
 const newPatientSchema = z.object({
   name: z.string().min(1).max(100),
@@ -90,7 +92,11 @@ export const patientRouter = createTRPCRouter({
         score: score,
         specialCare: input.specialCare,
         ecmoType: input.ecmoType,
+        updatedAt: new Date(),
       });
+
+      // Run the matching logic
+      await matchingLogic(ctx);
 
       return newPatient;
     }),
@@ -113,6 +119,9 @@ export const patientRouter = createTRPCRouter({
         score = patient.score;
       }
 
+      // Delete the match for the patient
+      await deleteMatch(ctx, { patientId: input.id });
+
       return await ctx.db
         .update(patients)
         .set({
@@ -121,6 +130,7 @@ export const patientRouter = createTRPCRouter({
           score: score,
           specialCare: input.specialCare,
           ecmoType: input.ecmoType,
+          updatedAt: new Date(),
         })
         .where(eq(patients.id, patient.id));
     }),
@@ -159,6 +169,8 @@ export const patientRouter = createTRPCRouter({
     .input(editPatientSchema)
     .mutation(async ({ ctx, input }) => {
       const userId = checkAuth();
+
+      await deleteMatch(ctx, { patientId: input.id });
 
       return await ctx.db.delete(patients).where(eq(patients.id, input.id));
     }),

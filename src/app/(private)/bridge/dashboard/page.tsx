@@ -16,6 +16,7 @@ import { PatientChart } from "../_components/charts";
 const Dashboard = async () => {
   try {
     const patientCount = (await api.patient.get()).length;
+    const totalPatientCount = (await api.patient.getAll()).length;
     const ecmoCount = (await api.ecmo.get()).length;
     return (
       <div className="flex min-h-screen w-full flex-col">
@@ -29,7 +30,7 @@ const Dashboard = async () => {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-6">
-                <div className="text-2xl font-bold">412</div>
+                <div className="text-2xl font-bold">{totalPatientCount}</div>
                 <p className="text-xs text-muted-foreground">
                   patients currently need an ECMO
                 </p>
