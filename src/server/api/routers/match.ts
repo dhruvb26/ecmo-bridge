@@ -5,146 +5,6 @@ import { checkAuth } from "../functions";
 import { eq, and, or } from "drizzle-orm";
 import { calculateDistance } from "../functions";
 
-export const matchingLogic = async (ctx: any) => {
-  console.log("Matching patients to ECMO machines");
-
-  const userId = checkAuth();
-  const hospital = await ctx.db.query.hospitals.findFirst({
-    where: eq(hospitals.userId, userId),
-  });
-
-  if (!hospital) {
-    throw new Error("Hospital not found");
-  }
-
-  const patientList = await ctx.db.query.patients.findMany({
-    where: and(
-      eq(patients.hospitalId, hospital.id),
-      eq(patients.isMatched, false),
-    ),
-    //TODO: Order by score and updatedAt
-  });
-
-  if (patientList.length === 0) {
-    return; // No action if no patients in queue
-  }
-
-  const availableEcmos = await ctx.db.query.ecmos.findMany({
-    where: and(eq(ecmos.inUse, false), eq(ecmos.isMatched, false)),
-  });
-
-  if (availableEcmos.length === 0) {
-    return; // No action if no ECMOs available
-  }
-
-  await Promise.all(
-    patientList.map(async (patient: any) => {
-      // Check if a match already exists for this patient
-      const existingMatch = await ctx.db.query.matches.findFirst({
-        where: eq(matches.patientId, patient.id),
-      });
-
-      const ecmosWithSameType = availableEcmos.filter(
-        (ecmo: any) => ecmo.type === patient.ecmoType,
-      );
-
-      const hospital = await ctx.db.query.hospitals.findFirst({
-        where: eq(hospitals.userId, userId),
-      });
-
-      if (ecmosWithSameType.length === 0) {
-        if (!existingMatch) {
-          await ctx.db.insert(matches).values({
-            patientId: patient.id,
-            hospitalId: hospital.id,
-            ecmoId: null, // No ECMO found
-            location: null,
-            distance: null,
-            duration: null,
-          });
-        }
-        return; // Exit current iteration, proceed to next patient
-      }
-
-      const distances = await Promise.all(
-        ecmosWithSameType.map(async (ecmo: any) => {
-          const { distance, duration } = await calculateDistance(
-            patient.coordinates,
-            ecmo.coordinates,
-          );
-          return {
-            ...ecmo,
-            distance,
-            duration,
-          };
-        }),
-      );
-
-      const sortedEcmos = distances.sort((a, b) => a.distance - b.distance);
-      const bestMatch = sortedEcmos[0];
-
-      if (
-        !existingMatch ||
-        (existingMatch &&
-          existingMatch.ecmoId !== bestMatch.ecmo.id &&
-          existingMatch.distance > bestMatch.distance)
-      ) {
-        if (existingMatch) {
-          // Set the old ECMO's isMatched to false if it's being replaced
-          await ctx.db
-            .update(ecmos)
-            .set({ isMatched: false })
-            .where(eq(ecmos.id, existingMatch.ecmoId));
-
-          const hospital = await ctx.db.query.hospitals.findFirst({
-            where: eq(hospitals.id, bestMatch.hospitalId),
-          });
-
-          // Update existing match
-          await ctx.db
-            .update(matches)
-            .set({
-              ecmoId: bestMatch.ecmo.id,
-              location: hospital.location,
-              distance: bestMatch.distance,
-              duration: bestMatch.duration,
-            })
-            .where(eq(matches.id, existingMatch.id));
-        } else {
-          const hospital = await ctx.db.query.hospitals.findFirst({
-            where: eq(hospitals.id, bestMatch.ecmo.hospitalId),
-          });
-
-          // Create a new match
-          await ctx.db.insert(matches).values({
-            patientId: patient.id,
-            hospitalId: hospital.id,
-            ecmoId: bestMatch.ecmo.id,
-            location: hospital.location,
-            distance: bestMatch.distance,
-            duration: bestMatch.duration,
-          });
-
-          // Mark the ECMO as matched
-          await ctx.db
-            .update(ecmos)
-            .set({ isMatched: true })
-            .where(eq(ecmos.id, bestMatch.ecmo.id));
-
-          await ctx.db
-            .update(patients)
-            .set({ isMatched: true })
-            .where(eq(patients.id, patient.id));
-        }
-      }
-    }),
-  );
-
-  return await ctx.db.query.matches.findMany({
-    where: eq(matches.hospitalId, hospital.id),
-  });
-};
-
 const deleteMatchSchema = z.object({
   patientId: z.number().optional(),
   ecmoId: z.number().optional(),
@@ -252,7 +112,20 @@ export const matchRouter = createTRPCRouter({
 
     return matchesList;
   }),
+  fetchMatchCount: publicProcedure.query(async ({ ctx }) => {
+    const userId = checkAuth();
+    const hospital = await ctx.db.query.hospitals.findFirst({
+      where: eq(hospitals.userId, userId),
+    });
+    if (!hospital) {
+      throw new Error("Hospital not found");
+    }
+    const matchesList = await ctx.db.query.matches.findMany({
+      where: eq(matches.hospitalId, hospital.id),
+    });
 
+    return matchesList.length;
+  }),
   runMatch: publicProcedure.query(async ({ ctx }) => {
     const userId = checkAuth();
     const hospital = await ctx.db.query.hospitals.findFirst({
@@ -265,7 +138,7 @@ export const matchRouter = createTRPCRouter({
     const patientList = await ctx.db.query.patients.findMany({
       where: eq(patients.hospitalId, hospital.id),
       orderBy: (patients, { desc }) => [desc(patients.score)],
-      // Additional ordering by createdAt can be included here
+      //TODO: Additional ordering by updatedAt can be included here
     });
 
     if (patientList.length === 0) {

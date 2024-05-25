@@ -4,7 +4,7 @@ import { ecmos } from "~/server/db/schema";
 import { checkAuth } from "../functions";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
-import { matchingLogic, deleteMatch } from "./match";
+import { deleteMatch } from "./match";
 
 const newEcmoSchema = z.object({
   model: z.string().min(1).max(100),
@@ -30,8 +30,6 @@ export const ecmoRouter = createTRPCRouter({
   create: publicProcedure
     .input(newEcmoSchema)
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-
       const userId = checkAuth();
 
       const hospital = await ctx.db.query.hospitals.findFirst({

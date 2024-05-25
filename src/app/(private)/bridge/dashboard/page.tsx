@@ -3,8 +3,8 @@ import {
   Activity,
   ArrowUpRight,
   CreditCard,
-  DollarSign,
-  Users,
+  UserCheck,
+  UsersRound,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -18,6 +18,7 @@ const Dashboard = async () => {
     const patientCount = (await api.patient.get()).length;
     const totalPatientCount = (await api.patient.getAll()).length;
     const ecmoCount = (await api.ecmo.get()).length;
+    const matchCount = await api.match.fetchMatchCount();
     return (
       <div className="flex min-h-screen w-full flex-col">
         <main className="flex flex-1 flex-col gap-4  p-4 md:gap-8 md:p-8">
@@ -27,26 +28,26 @@ const Dashboard = async () => {
                 <CardTitle className="text-sm font-medium">
                   Total Patients
                 </CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <UsersRound className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-6">
                 <div className="text-2xl font-bold">{totalPatientCount}</div>
                 <p className="text-xs text-muted-foreground">
-                  patients currently need an ECMO
+                  total patients currently need an ECMO
                 </p>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Patients
+                  Your Patients
                 </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <UserCheck className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-6">
                 <div className="text-2xl font-bold">{patientCount}</div>
                 <p className="text-xs text-muted-foreground">
-                  Look below for more details
+                  patients from your hospital
                 </p>
               </CardContent>
             </Card>
@@ -60,7 +61,7 @@ const Dashboard = async () => {
               <CardContent className="px-6">
                 <div className="text-2xl font-bold">{ecmoCount}</div>
                 <p className="text-xs text-muted-foreground">
-                  Look below for more details
+                  are machines from your hospital
                 </p>
               </CardContent>
             </Card>
@@ -72,10 +73,8 @@ const Dashboard = async () => {
                 <Activity className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-6">
-                <div className="text-2xl font-bold">6</div>
-                <p className="text-xs text-muted-foreground">
-                  Currently matched patients
-                </p>
+                <div className="text-2xl font-bold">{matchCount}</div>
+                <p className="text-xs text-muted-foreground">total matches</p>
               </CardContent>
             </Card>
           </div>

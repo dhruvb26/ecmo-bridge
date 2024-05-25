@@ -1,6 +1,6 @@
 "use client";
+import { useEffect, useState } from "react";
 import { api } from "~/trpc/react";
-import React from "react";
 import {
   Table,
   TableBody,
@@ -10,23 +10,47 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import BarLoader from "react-spinners/BarLoader";
+import CountUp from "react-countup";
 
 const MatchList = () => {
   const query = api.match.runMatch.useQuery();
   const matches = query.data;
+  const [isComplete, setIsComplete] = useState(false); // State to track if counting should stop
 
-  if (query.isLoading) {
+  // Reset count up completion state on new loading
+  useEffect(() => {
+    if (query.isLoading) {
+      setIsComplete(false);
+    }
+  }, [query.isLoading]);
+
+  if (query.isLoading && !isComplete) {
     return (
-      <div className="flex min-h-screen flex-row items-center justify-center text-center">
-        <BarLoader color="#2563EB" />
+      <div className="flex min-h-screen items-center justify-center">
+        <CountUp
+          start={0}
+          end={100}
+          duration={4.5}
+          onEnd={() => {
+            setIsComplete(true); // Set completion when count up finishes
+          }}
+        >
+          {({ countUpRef }) => (
+            <div>
+              <span
+                className="text-3xl font-semibold text-primary-purple-900"
+                ref={countUpRef}
+              />
+            </div>
+          )}
+        </CountUp>
       </div>
     );
   }
 
   if (query.error) {
     return (
-      <div className="flex min-h-screen flex-row items-center justify-center text-center">
+      <div className="flex min-h-screen items-center justify-center">
         {query.error.message}
       </div>
     );

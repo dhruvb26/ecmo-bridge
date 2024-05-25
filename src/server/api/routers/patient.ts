@@ -5,7 +5,6 @@ import { checkAuth } from "../functions";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
 import { deleteMatch } from "./match";
-import { matchingLogic } from "./match";
 
 const newPatientSchema = z.object({
   name: z.string().min(1).max(100),
@@ -94,9 +93,6 @@ export const patientRouter = createTRPCRouter({
         ecmoType: input.ecmoType,
         updatedAt: new Date(),
       });
-
-      // Run the matching logic
-      await matchingLogic(ctx);
 
       return newPatient;
     }),
