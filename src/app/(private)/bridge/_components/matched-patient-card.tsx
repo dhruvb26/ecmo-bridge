@@ -6,7 +6,6 @@ import {
   CardContent,
   CardFooter,
 } from "~/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -21,7 +20,7 @@ import {
 import { api } from "~/trpc/server";
 
 export async function MatchedPatients() {
-  const patientsAll = await api.patient.get();
+  const patientsAll = await api.patient.getMatched();
   const patients = patientsAll.slice(0, 5);
   return (
     <Card x-chunk="dashboard-01-chunk-5">

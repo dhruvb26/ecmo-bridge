@@ -65,7 +65,10 @@ const Navbar = () => {
         </SignedIn>
         <NavigationMenuItem>
           <SignedOut>
-            <Button variant={"link"}>
+            <Button
+              variant={"link"}
+              className="text-primary-purple-700 md:text-white"
+            >
               <SignInButton />
             </Button>
           </SignedOut>

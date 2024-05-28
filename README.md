@@ -11,6 +11,7 @@ ECMO Bridge is a state-of-the-art application designed to efficiently allocate E
 - [x] Integrate tRPC for type-safe remote procedure calls
 - [x] Add footer
 - [x] Design backend (matching) logic
+- [ ] Realtime matching update
 - [ ] Additional chat feature
 
 ## Key Features

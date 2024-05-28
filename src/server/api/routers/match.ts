@@ -210,6 +210,11 @@ export const matchRouter = createTRPCRouter({
             .where(eq(matches.id, existingMatch.id));
 
           await ctx.db
+            .update(patients)
+            .set({ isMatched: true })
+            .where(eq(patients.id, patient.id));
+
+          await ctx.db
             .update(ecmos)
             .set({ isMatched: true })
             .where(eq(ecmos.id, bestMatch.ecmo.id));
@@ -227,6 +232,11 @@ export const matchRouter = createTRPCRouter({
           distance: bestMatch.distance,
           duration: bestMatch.duration,
         });
+
+        await ctx.db
+          .update(patients)
+          .set({ isMatched: true })
+          .where(eq(patients.id, patient.id));
 
         await ctx.db
           .update(ecmos)

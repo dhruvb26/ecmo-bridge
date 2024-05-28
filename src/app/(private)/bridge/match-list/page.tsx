@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import CountUp from "react-countup";
+import BarLoader from "react-spinners/BarLoader";
 
 const MatchList = () => {
   const query = api.match.runMatch.useQuery();
@@ -27,7 +28,7 @@ const MatchList = () => {
   if (query.isLoading && !isComplete) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <CountUp
+        {/* <CountUp
           start={0}
           end={100}
           duration={4.5}
@@ -43,7 +44,8 @@ const MatchList = () => {
               />
             </div>
           )}
-        </CountUp>
+        </CountUp> */}
+        <BarLoader color="#8d33ff" width={250} />
       </div>
     );
   }

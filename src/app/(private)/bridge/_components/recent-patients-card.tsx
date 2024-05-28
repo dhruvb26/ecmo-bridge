@@ -56,7 +56,7 @@ export async function RecentPatients() {
           <TableBody>
             {patients.map((patient) => {
               return (
-                <TableRow>
+                <TableRow key={patient.id}>
                   <TableCell>
                     <div className="font-medium">{patient.name}</div>
                   </TableCell>

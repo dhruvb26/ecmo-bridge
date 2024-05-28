@@ -5,6 +5,7 @@ import { checkAuth } from "../functions";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
 import { deleteMatch } from "./match";
+import { and } from "drizzle-orm";
 
 const newPatientSchema = z.object({
   name: z.string().min(1).max(100),
@@ -143,6 +144,22 @@ export const patientRouter = createTRPCRouter({
 
     return await ctx.db.query.patients.findMany({
       where: eq(patients.hospitalId, hospital.id),
+    });
+  }),
+  getMatched: publicProcedure.query(async ({ ctx }) => {
+    const userId = checkAuth();
+
+    const hospital = await ctx.db.query.hospitals.findFirst({
+      where: (model, { eq }) => eq(model.userId, userId),
+    });
+
+    if (!hospital) {
+      throw new Error("Hospital not found");
+    }
+
+    return await ctx.db.query.patients.findMany({
+      where: (model, { eq }) =>
+        and(eq(model.hospitalId, hospital.id), eq(model.isMatched, true)),
     });
   }),
   getCount: publicProcedure.query(async ({ ctx }) => {
