@@ -8,6 +8,7 @@ export function checkAuth() {
   }
   return userId;
 }
+
 export const getCurrentDateTime = () => {
   const now = new Date();
   const date = now.toLocaleDateString("en-US", {

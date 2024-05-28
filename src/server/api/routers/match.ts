@@ -138,7 +138,7 @@ export const matchRouter = createTRPCRouter({
     const patientList = await ctx.db.query.patients.findMany({
       where: eq(patients.hospitalId, hospital.id),
       orderBy: (patients, { desc }) => [desc(patients.score)],
-      //TODO: Additional ordering by updatedAt can be included here
+      //TODO: Additional ordering by updatedAt can be included here (ascending)
     });
 
     if (patientList.length === 0) {
@@ -190,6 +190,9 @@ export const matchRouter = createTRPCRouter({
 
       if (existingMatch && existingMatch.ecmoId !== null) {
         if (existingMatch.ecmoId !== bestMatch.ecmo.id) {
+          const bestMatchHospital = await ctx.db.query.hospitals.findFirst({
+            where: eq(hospitals.id, bestMatch.ecmo.hospitalId),
+          });
           // ECMO change scenario
           await ctx.db
             .update(ecmos)
@@ -200,7 +203,7 @@ export const matchRouter = createTRPCRouter({
             .update(matches)
             .set({
               ecmoId: bestMatch.ecmo.id,
-              location: hospital.location,
+              location: bestMatchHospital?.location,
               distance: bestMatch.distance,
               duration: bestMatch.duration,
             })
@@ -212,12 +215,15 @@ export const matchRouter = createTRPCRouter({
             .where(eq(ecmos.id, bestMatch.ecmo.id));
         }
       } else {
+        const bestMatchHospital = await ctx.db.query.hospitals.findFirst({
+          where: eq(hospitals.id, bestMatch.ecmo.hospitalId),
+        });
         // New match scenario
         await ctx.db.insert(matches).values({
           patientId: patient.id,
           hospitalId: hospital.id,
           ecmoId: bestMatch.ecmo.id,
-          location: hospital.location,
+          location: bestMatchHospital?.location,
           distance: bestMatch.distance,
           duration: bestMatch.duration,
         });
