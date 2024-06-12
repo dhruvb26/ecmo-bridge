@@ -12,6 +12,7 @@ ECMO Bridge is a state-of-the-art application designed to efficiently allocate E
 - [x] Add footer
 - [x] Design backend (matching) logic
 - [ ] Realtime matching update
+- [ ] Maybe add Clerk blocklist?
 - [ ] Additional chat feature
 
 ## Key Features

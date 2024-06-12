@@ -109,8 +109,25 @@ export const matchRouter = createTRPCRouter({
     if (matchesList.length === 0) {
       throw new Error("No matches found for your hospital.");
     }
+    // Enhance matches with patient details
+    const enhancedMatches = await Promise.all(
+      matchesList.map(async (match) => {
+        const patient = await ctx.db.query.patients.findFirst({
+          where: eq(patients.id, match.patientId),
+        });
 
-    return matchesList;
+        return {
+          id: match.id,
+          patientName: patient ? patient.name : "Unknown", // Fallback to 'Unknown' if patient not found
+          ecmoType: patient ? patient.ecmoType : "Unknown", // Fallback to 'Unknown' if patient not found
+          ecmoId: match.ecmoId,
+          location: match.location,
+          distance: match.distance,
+          duration: match.duration,
+        };
+      }),
+    );
+    return enhancedMatches;
   }),
   fetchMatchCount: publicProcedure.query(async ({ ctx }) => {
     const userId = checkAuth();

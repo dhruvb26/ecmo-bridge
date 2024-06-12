@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { cn } from "~/lib/utils";
 import { Avatar } from "./ui/avatar";
@@ -23,10 +23,23 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setDrawerOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   // Define the menu content to reuse in both mobile and desktop layouts
   const MenuContent = () => (
     <NavigationMenu>
-      <NavigationMenuList className="flex flex-col space-y-2   md:flex-row md:items-center md:space-x-2 md:space-y-0 md:bg-transparent">
+      <NavigationMenuList className="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 md:bg-transparent">
         <NavigationMenuItem asChild>
           <Button
             variant={"link"}
@@ -88,13 +101,6 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between lg:h-20">
           <div className="flex-shrink-0">
             <Link href="/" className="flex">
-              {/* <Image
-                height={32}
-                width={32}
-                className="h-8 w-auto"
-                src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/5/logo.svg"
-                alt=""
-              /> */}
               <span className="text-2xl font-bold text-white">ECMO Bridge</span>
             </Link>
           </div>
@@ -109,7 +115,7 @@ const Navbar = () => {
         </div>
         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerContent>
-            <DrawerDescription className="flex flex-row justify-end p-4">
+            <DrawerDescription className="flex flex-row justify-end bg-white p-4">
               <DrawerClose onClick={() => setDrawerOpen(false)}>
                 <Button variant={"secondary"}>
                   <Cross1Icon />
